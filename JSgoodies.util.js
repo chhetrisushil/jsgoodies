@@ -1,8 +1,5 @@
-// Global Namespace
-var JSgoodies = {};
-
 (function (window, document, JSgoodies, undefined) {
-    JSgoodies.util = {
+    JSgoodies.Util = {
         override: function (parent, prop) {
             for (var name in prop) {
                 parent[name] = (parent.hasOwnProperty(name) && typeof prop[name] === 'function' && typeof parent[name] === 'function') ? (function (p, fn) {
@@ -40,4 +37,4 @@ var JSgoodies = {};
             return child;
         }
     };
-})(this, this.document, (this.JSgoodies || (this.JSgoodies = {})));
+})(this, this.document, (this.JSgoodies || (this.JSgoodies = {})) /*Check for global namespace*/);

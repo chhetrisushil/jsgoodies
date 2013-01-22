@@ -1,6 +1,8 @@
 <html>
     <head>
-        <script type="text/javascript" src="JSgoodies.util.js"></script>
+        <script type="text/javascript" src="JSgoodies.Class.js"></script>
+        <script type="text/javascript" src="JSgoodies.Interface.js"></script>
+        <script type="text/javascript" src="JSgoodies.Util.js"></script>
         <script>
             // override example
             var a = {
@@ -20,7 +22,7 @@
                     }
                 };
 
-            JSgoodies.util.override(a, {
+            JSgoodies.Util.override(a, {
                 name: 'ch',
                 
                 init: function () {
@@ -87,13 +89,38 @@
                     }
                 };
                 console.log('/**************inherit example - start******************/');
-                JSgoodies.util.inherit(i, j);
+                JSgoodies.Util.inherit(i, j);
                 i.init();
                 console.log('\n \n');
                 j.init();
                 j.ar[j.ar.length] = 4;
                 console.log('/**************inherit example - end******************/\n \n');
                 
+                var IBar = new JSgoodies.Interface('bar', ['init', 'someMethod']),
+                    ISecond = new JSgoodies.Interface('second', ['additionalMethod']),
+                    IThird = new JSgoodies.Interface('third', ['someAdditionalMethod']),
+                    Foo = JSgoodies.Class.extend({
+                        init: function () {
+                            console.log('this is foo class');
+                        },
+                        someMethod: function () {
+                        },
+                        additionalMethod: function () {
+                        }
+                    }).implement(IBar, ISecond);
+                
+                new Foo();
+                
+                var ExFoo = Foo.extend({
+                    init: function () {
+                        this._super();
+                        console.log('extending Foo');
+                    },
+                    someAdditionalMethod: function () {
+                    }
+                }).implement(IThird);
+                
+                new ExFoo();
         </script>
     </head>
 </html>
