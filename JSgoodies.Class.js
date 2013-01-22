@@ -41,6 +41,10 @@
     // Create a new Class that inherits from this class
     JSgoodies.Class.extend = function(prop) {
         var _super = this.prototype;
+        
+        if (typeof prop === 'function') {
+            prop = prop.prototype;
+        }
 
         // Instantiate a base class (but only create the instance,
         // don't run the init constructor)
@@ -85,7 +89,7 @@
         // And make this class extendable
         Class.extend = arguments.callee;
         Class.implement = implement;
-
+        
         return Class;
     };
 })(this, this.document, (this.JSgoodies || (this.JSgoodies = {}))  /*Check for global namespace*/);

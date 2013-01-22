@@ -123,7 +123,14 @@
                 
                 new ExFoo();
                 
-                var a = new JSgoodies.AbstractClass();
+                var ab = JSgoodies.AbstractClass.extend({init: function () {}, someMethod: function () {}}).implement(IBar),
+                    ab1 = JSgoodies.AbstractClass.extend({additionalMethod: function () {}}).implement(ISecond),
+                    ab2 = ab.extend({something: 'fads'}),
+                    ab3 = JSgoodies.Class.extend(ab2),
+                    ab4 = ab3.extend({adding: 'fadsfadsfasd'}),
+                    ab5 = ab4.extend(Foo),
+                    ab6 = ab1.extend(ExFoo);
+                    
         </script>
     </head>
 </html>
