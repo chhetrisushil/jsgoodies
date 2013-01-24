@@ -27,7 +27,13 @@
         },
         internal = false, fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
         
-    JSgoodies.AbstractClass = function () {};
+    JSgoodies.AbstractClass = function () {
+        if (!internal) {
+            this.constructor = new (function () {
+                throw new Error('Trying to instantiate an Abstract Class');
+            })();
+        }
+    };
     
     JSgoodies.AbstractClass.implement = implement;
     
