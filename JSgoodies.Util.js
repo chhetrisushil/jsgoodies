@@ -1,8 +1,9 @@
 (function (window, document, JSgoodies, undefined) {
     JSgoodies.Util = {
         override: function (parent, prop) {
+            var hasOwnProperty = Object.prototype.hasOwnProperty;
             for (var name in prop) {
-                parent[name] = (parent.hasOwnProperty(name) && typeof prop[name] === 'function' && typeof parent[name] === 'function') ? (function (p, fn) {
+                parent[name] = (hasOwnProperty.call(parent, name) && typeof prop[name] === 'function' && typeof parent[name] === 'function') ? (function (p, fn) {
                     var su = parent[p];
                     return function () {
                         var tmp = parent._super;
@@ -18,9 +19,10 @@
         
         inherit: function (parent, child) {
             var toString = Object.prototype.toString,
-                self = arguments.callee;
+                self = arguments.callee,
+                hasOwnProperty = Object.prototype.hasOwnProperty;
             for (var name in parent) {
-                child[name] = (child.hasOwnProperty(name) && typeof child[name] === 'function' && typeof parent[name] === 'function') ? (function (p, fn) {
+                child[name] = (hasOwnProperty.call(child, name) && typeof child[name] === 'function' && typeof parent[name] === 'function') ? (function (p, fn) {
                     return function () {
                         var tmp = child._super;
                         child._super = parent[p];
@@ -29,7 +31,7 @@
                         return ret;
                     };
                 })(name, child[name]) : 
-                    child.hasOwnProperty(name) ? child[name] : 
+                    hasOwnProperty.call(child, name) ? child[name] : 
                         (toString.call(parent[name]) === '[object Array]') ? parent[name].concat() : 
                             (toString.call(parent[name]) === '[object Object]') ? self(parent[name], {}) : parent[name];
             }
