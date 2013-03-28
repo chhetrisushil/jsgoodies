@@ -4,6 +4,7 @@
         <script type="text/javascript" src="JSgoodies.AbstractClass.js"></script>
         <script type="text/javascript" src="JSgoodies.Interface.js"></script>
         <script type="text/javascript" src="JSgoodies.Util.js"></script>
+        <script type="text/javascript" src="JSgoodies.ObservableClass.js"></script>
         <script>
             // override example
             var a = {
@@ -130,7 +131,71 @@
                     ab4 = ab3.extend({adding: 'fadsfadsfasd'}),
                     ab5 = ab4.extend(Foo),
                     ab6 = ab1.extend(ExFoo);
-                    
+
+
+            //Testing ObservableClass
+            var Test = JSgoodies.ObservableClass.extend({
+                init: function () {
+                    this.addObserver('s', function () {
+                        console.log('firing s first');
+                    });
+                    this.addObserver('s', function () {
+                        console.log('firing s');
+                    });
+                    this.addObserver('u', function () {
+                        console.log('firing u');
+                    });
+                    this.addObserver('u.a', function () {
+                        console.log('firing u.a');
+                    });
+                    this.addObserver('g.a', function () {
+                        console.log('firing g.a');
+                    });
+                    this.addObserver('g.b', function () {
+                        console.log('firing g.b');
+                    });
+                }
+            });
+
+            var test = new Test();
+            test.fireObserver('g.b');
+            console.log('\n\n\n');
+            var uAH;
+            var Test1 = JSgoodies.ObservableClass.extend({
+                init: function () {
+                    uAH = function (a, b) {
+                        console.log('firing ', arguments);
+                    };
+                    this.addObserver('s', function () {
+                        console.log('firing s first');
+                    });
+                    this.addObserver('s', function () {
+                        console.log('firing s');
+                    });
+                    this.addObserver('u', uAH);
+                    this.addObserver('h', function () {
+                        console.log('firing h');
+                    }, 'hId');
+                    this.addObserver('u.a', uAH, 'myId');
+                    this.addObserver('u.a', function () {
+                        console.log('firing u.a second');
+                    });
+                    this.addObserver('g.a', function () {
+                        console.log('firing g.a');
+                    });
+                    this.addObserver('g.b', function () {
+                        console.log('firing g.b');
+                    });
+                }
+            });
+
+            var test1 = new Test1();
+            test1.fireObserver('u.a', 'adsfa');
+            test1.removeObserver('h', 'hId');
+            //test1.removeObserver('u.a', uAH);
+            //test1.removeObserver('u', uAH);
+            //test1.removeObserverByNamespace('a');
+            test1.fireObserver('u', {'fadsffgsdfg': 'fadsfs'}, 'gsfdgs', 'adfsads');
         </script>
     </head>
 </html>
