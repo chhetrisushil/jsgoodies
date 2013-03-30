@@ -1,5 +1,5 @@
 (function (window, document, JSgoodies, undefined) {
-    var implement = function (/*interfaces*/) {
+    var implements = function (/*interfaces*/) {
             var proto = this.prototype,
                 i, j,
                 len = arguments.length,
@@ -35,7 +35,7 @@
         }
     };
     
-    JSgoodies.AbstractClass.implement = implement;
+    JSgoodies.AbstractClass.implements = implements;
     
     JSgoodies.AbstractClass.extend = function (prop) {
         var _super = this.prototype;
@@ -80,7 +80,7 @@
         }
         AbstractClass.prototype = prototype;
         AbstractClass.extend = arguments.callee;
-        AbstractClass.implement = implement;
+        AbstractClass.implements = implements;
         
         return AbstractClass;
     };

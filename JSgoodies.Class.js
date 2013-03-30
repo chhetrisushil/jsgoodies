@@ -5,7 +5,7 @@
      */
     // Inspired by base2 and Prototype
     var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/,
-        implement = function (/*interfaces*/) {
+        implements = function (/*interfaces*/) {
             var proto = this.prototype,
                 i, j,
                 len = arguments.length,
@@ -36,7 +36,7 @@
     JSgoodies.Class = function(){};
     
     //implement method
-    JSgoodies.Class.implement = implement;
+    JSgoodies.Class.implements = implements;
 
     // Create a new Class that inherits from this class
     JSgoodies.Class.extend = function(prop) {
@@ -88,7 +88,7 @@
 
         // And make this class extendable
         Class.extend = arguments.callee;
-        Class.implement = implement;
+        Class.implements = implements;
         
         return Class;
     };

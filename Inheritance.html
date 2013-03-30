@@ -109,7 +109,7 @@
                         },
                         additionalMethod: function () {
                         }
-                    }).implement(IBar, ISecond);
+                    }).implements(IBar, ISecond);
                 
                 new Foo();
                 
@@ -120,12 +120,12 @@
                     },
                     someAdditionalMethod: function () {
                     }
-                }).implement(IThird);
+                }).implements(IThird);
                 
                 new ExFoo();
                 
-                var ab = JSgoodies.AbstractClass.extend({init: function () {}, someMethod: function () {}}).implement(IBar),
-                    ab1 = JSgoodies.AbstractClass.extend({additionalMethod: function () {}}).implement(ISecond),
+                var ab = JSgoodies.AbstractClass.extend({init: function () {}, someMethod: function () {}}).implements(IBar),
+                    ab1 = JSgoodies.AbstractClass.extend({additionalMethod: function () {}}).implements(ISecond),
                     ab2 = ab.extend({something: 'fads'}),
                     ab3 = JSgoodies.Class.extend(ab2),
                     ab4 = ab3.extend({adding: 'fadsfadsfasd'}),
