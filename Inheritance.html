@@ -196,6 +196,33 @@
             //test1.removeObserver('u', uAH);
             //test1.removeObserverByNamespace('a');
             test1.fireObserver('u', {'fadsffgsdfg': 'fadsfs'}, 'gsfdgs', 'adfsads');
+
+            // Implements test with custom class
+            var ITestInterface = new JSgoodies.Interface('ITestInterface', ['method1: [String, commonFn]', 'method2:3', 'method3']);
+            var CTest = JSgoodies.Class.extend({
+                    method1: function (a, b) {
+                        console.log('method1');
+                    },
+                    method2: function (a, b, c) {
+                        console.log('method2');
+                    },
+                    method3: function () {
+                        console.log('method3');
+                    }
+                }).implements(ITestInterface);
+            var JS = {};
+            JS.AnotherTestClass = JSgoodies.Class.extend({
+                init: function () {
+                    console.log('initializing test class');
+                }
+            });
+            var commonFn = function () {
+                console.log('something to test');
+            };
+            var cTest = new CTest();
+            cTest.method1('1', new commonFn());
+            cTest.method2(1, 2, 3);
+            cTest.method3();
         </script>
     </head>
 </html>
