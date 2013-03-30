@@ -98,11 +98,11 @@
                 j.ar[j.ar.length] = 4;
                 console.log('/**************inherit example - end******************/\n \n');
                 
-                var IBar = new JSgoodies.Interface('bar', ['init', 'someMethod']),
+                var IBar = new JSgoodies.Interface('bar', ['init:2', 'someMethod']),
                     ISecond = new JSgoodies.Interface('second', ['additionalMethod']),
                     IThird = new JSgoodies.Interface('third', ['someAdditionalMethod']),
                     Foo = JSgoodies.Class.extend({
-                        init: function () {
+                        init: function (a, b) {
                             console.log('this is foo class');
                         },
                         someMethod: function () {
@@ -111,20 +111,20 @@
                         }
                     }).implements(IBar, ISecond);
                 
-                new Foo();
+                new Foo('go', 'foo', 'gdf');
                 
                 var ExFoo = Foo.extend({
-                    init: function () {
-                        this._super();
+                    init: function (a, b) {
+                        this._super(a, b);
                         console.log('extending Foo');
                     },
                     someAdditionalMethod: function () {
                     }
                 }).implements(IThird);
                 
-                new ExFoo();
+                new ExFoo('go1', 'foo1');
                 
-                var ab = JSgoodies.AbstractClass.extend({init: function () {}, someMethod: function () {}}).implements(IBar),
+                var ab = JSgoodies.AbstractClass.extend({init: function (a, b) {}, someMethod: function () {}}).implements(IBar),
                     ab1 = JSgoodies.AbstractClass.extend({additionalMethod: function () {}}).implements(ISecond),
                     ab2 = ab.extend({something: 'fads'}),
                     ab3 = JSgoodies.Class.extend(ab2),
