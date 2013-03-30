@@ -46,6 +46,13 @@
                                         fn = context[name],
                                         count = method.argsCount,
                                         typeOf = function (val) {
+                                            if (typeof val === 'undefined') {
+                                                return 'Undefined';
+                                            }
+
+                                            if (val === null) {
+                                                return 'Null';
+                                            }
                                             return toString.call(val).match(/^\[object (.*)\]$/)[1];
                                         };
                                     return function () {
