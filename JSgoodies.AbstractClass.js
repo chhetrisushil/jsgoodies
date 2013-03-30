@@ -31,18 +31,18 @@
 
             for (j = 0; (_interface = arguments[j]); j++) {
                 for (var k = 0, args; (method = _interface.methods[k]); k++) {
-                    method.args = getArgumentsCount(proto[method.method]);
                     if (!proto[method.method] || typeof proto[method.method] !== 'function') {
-                        throw new Error('This Class does not implement "'+_interface.name+'" interface. Method "'+method+'" was not found.');
+                        throw new Error('This Class does not implement "'+_interface.name+'" interface. Method "'+method.method+'" was not found.');
                     } else {
+                        method.args = getArgumentsCount(proto[method.method]);
                         if (method.args.argsCount < method.argsCount) {
-                            throw new Error('Minimum no. of expected parameter definition for method "'+method.method+'" is: '+method.argsCount);
+                            throw new Error('Minimum no. of expected parameter definition for method "'+method.method+'" is: '+method.argsCount+' instead only: '+arguments.length+' was provided');
                         } else {
                             proto[method.method] = !method.isTypeCheck ? (function (name, fn, context, count) {
                                 return function () {
                                     var ret;
                                     if (arguments.length < count) {
-                                        throw new Error('Minimum no. of expected parameter for method "'+name+'" while calling is: '+count);
+                                        throw new Error('Minimum no. of expected parameter for method "'+name+'" while calling is: '+count+' instead only: '+arguments.length+' was provided');
                                     }
                                     ret = fn.apply(context, arguments);
                                     return ret;
@@ -59,17 +59,31 @@
                                     return function () {
                                         var ret, i, type;
                                         if (arguments.length < count) {
-                                            throw new Error('Minimum no. of expected parameter for method "'+name+'" while calling is: '+count);
+                                            throw new Error('Minimum no. of expected parameter for method "'+name+'" while calling is: '+count+' instead only: '+arguments.length+' was provided');
                                         }
 
                                         for (i = 0, len = method.types.length; i < len; i++) {
-                                            type = method.types[i].replace(/^\s+/, '').replace(/\s+$/, ''); // trim the spaces before and after;
-                                            if (typeOf(arguments[i]).toLowerCase() !== type.toLowerCase()
-                                                && !((typeOf(arguments[i]).toLowerCase() === 'function') ?
-                                                arguments[i] === window['eval'].call(window, type) :
-                                                arguments[i].constructor === window['eval'].call(window, type))) {
+                                            type = method.types[i].replace(/^\s+/, '').replace(/\s+$/, ''); // trim the spaces before and after
+                                            if (!~type.indexOf('|')) {
+                                                if (typeOf(arguments[i]).toLowerCase() !== type.toLowerCase()
+                                                    && !((typeOf(arguments[i]).toLowerCase() === 'function') ?
+                                                    arguments[i] === window['eval'].call(window, type) :
+                                                    arguments[i] && arguments[i].constructor === window['eval'].call(window, type))) {
 
-                                                throw new TypeError('While calling Expected type for argument "'+method.args.argsName[i]+'" in method "'+method.method+'" is: '+type);
+                                                    throw new TypeError('While calling Expected type for argument "'+method.args.argsName[i]+'" in method "'+method.method+'" is: "'+type+'" instead type: "'+typeOf(arguments[i])+'" was provided');
+                                                }
+                                            } else {
+                                                // support to provide one alternative e.g. String|Null or String|Number
+                                                type = type.split('|');
+                                                type[0] = type[0].replace(/^\s+/, '').replace(/\s+$/, '') || 'undefined';
+                                                type[1] = type[1].replace(/^\s+/, '').replace(/\s+$/, '') || 'undefined';
+                                                if ((typeOf(arguments[i]).toLowerCase() !== type[0].toLowerCase() && typeOf(arguments[i]).toLowerCase() !== type[1].toLowerCase())
+                                                    && !((typeOf(arguments[i]).toLowerCase() === 'function') ?
+                                                    arguments[i] === window['eval'].call(window, type) :
+                                                    arguments[i] && arguments[i].constructor === window['eval'].call(window, type))) {
+
+                                                    throw new TypeError('While calling Expected type for argument "'+method.args.argsName[i]+'" in method "'+method.method+'" is: "'+type[0]+'" or "'+type[1]+'" instead type: "'+typeOf(arguments[i])+'" was provided');
+                                                }
                                             }
                                         }
 
