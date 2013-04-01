@@ -38,13 +38,13 @@
                         if (method.args.argsCount < method.argsCount) {
                             throw new Error('Minimum no. of expected parameter definition for method "'+method.method+'" is: '+method.argsCount+' instead only: '+arguments.length+' was provided');
                         } else {
-                            proto[method.method] = !method.isTypeCheck ? (function (name, fn, context, count) {
+                            proto[method.method] = !method.isTypeCheck ? (function (name, fn, count) {
                                 return function () {
                                     var ret;
                                     if (arguments.length < count) {
                                         throw new Error('Minimum no. of expected parameter for method "'+name+'" while calling is: '+count+' instead only: '+arguments.length+' was provided');
                                     }
-                                    ret = fn.apply(context, arguments);
+                                    ret = fn.apply(this, arguments);
                                     return ret;
                                 };
                             })(method.method, proto[method.method], proto, method.argsCount) :
@@ -99,7 +99,7 @@
                                             }
                                         }
 
-                                        ret = fn.apply(context, arguments);
+                                        ret = fn.apply(this, arguments);
                                         return ret;
                                     };
                                 })(method, proto);
@@ -120,7 +120,7 @@
                 match = argsRegExp.exec(fnToString)[1],
                 argsCount, argsName;
             match = match.replace(commentRegExp, ''); // this is to remove any comment made for any arguments.
-            argsCount = (match) ? ~match.indexOf(',') ? (argsName = match.split(','), match.split(',').length) : 1 : 0;
+            argsCount = (match) ? ~match.indexOf(',') ? (argsName = match.split(','), match.split(',').length) : (argsName = match, 1) : 0;
 
             return {argsName: argsName, argsCount: parseInt(argsCount, 10)};
         },
