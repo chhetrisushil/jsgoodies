@@ -64,18 +64,23 @@
                                             return toString.call(val).match(/^\[object (.*)\]$/)[1];
                                         };
                                     return function () {
-                                        var ret, i, type;
+                                        var ret, i, type,evaledType;
                                         if (arguments.length < count) {
                                             throw new Error('Minimum no. of expected parameter for method "'+name+'" while calling is: '+count+' instead only: '+arguments.length+' was provided');
                                         }
 
                                         for (i = 0, len = method.types.length; i < len; i++) {
                                             type = method.types[i].replace(/^\s+/, '').replace(/\s+$/, ''); // trim the spaces before and after
+                                            try {
+                                                evaledType = window['eval'].call(window, type);
+                                            } catch(e) {
+                                                evaledType = undefined;
+                                            }
                                             if (!~type.indexOf('|')) {
                                                 if (typeOf(arguments[i]).toLowerCase() !== type.toLowerCase()
                                                     && !((typeOf(arguments[i]).toLowerCase() === 'function') ?
-                                                    arguments[i] === window['eval'].call(window, type) :
-                                                    arguments[i] && arguments[i].constructor === window['eval'].call(window, type))) {
+                                                    arguments[i] === evaledType :
+                                                    arguments[i] && arguments[i].constructor === evaledType)) {
 
                                                     throw new TypeError('While calling Expected type for argument "'+method.args.argsName[i]+'" in method "'+method.method+'" is: "'+type+'" instead type: "'+typeOf(arguments[i])+'" was provided');
                                                 }
@@ -86,8 +91,8 @@
                                                 type[1] = type[1].replace(/^\s+/, '').replace(/\s+$/, '') || 'undefined';
                                                 if ((typeOf(arguments[i]).toLowerCase() !== type[0].toLowerCase() && typeOf(arguments[i]).toLowerCase() !== type[1].toLowerCase())
                                                     && !((typeOf(arguments[i]).toLowerCase() === 'function') ?
-                                                    arguments[i] === window['eval'].call(window, type) :
-                                                    arguments[i] && arguments[i].constructor === window['eval'].call(window, type))) {
+                                                    arguments[i] === evaledType :
+                                                    arguments[i] && arguments[i].constructor === evaledType)) {
 
                                                     throw new TypeError('While calling Expected type for argument "'+method.args.argsName[i]+'" in method "'+method.method+'" is: "'+type[0]+'" or "'+type[1]+'" instead type: "'+typeOf(arguments[i])+'" was provided');
                                                 }
