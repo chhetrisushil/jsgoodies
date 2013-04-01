@@ -170,8 +170,14 @@
      * Implementatior for 'Class'
      */
     var Class = function (props) {
-        if (!check('[object Object]')(props)) {
-            throw new TypeError('Class Expects Object');
+        var isObject = check('[object Object]'),
+            isFunction = check('[object Function]');
+
+        if (!isFunction(props) && !isObject(props)) {
+            throw new TypeError('Class expects Object or Function');
+        }
+        if (isFunction(props)) {
+            props = props.prototype;
         }
         var fn = function Class() {
             if ( !initializing && this.init )
@@ -189,6 +195,15 @@
      * Implementation for 'AbstractClass'
      */
     var AbstractClass = function (props) {
+        var isObject = check('[object Object]'),
+            isFunction = check('[object Function]');
+
+        if (!isFunction(props) && !isObject(props)) {
+            throw new TypeError('AbstractClass expects Object or Function');
+        }
+        if (isFunction(props)) {
+            props = props.prototype;
+        }
         var fn = function AbstractClass() {
                 if (!initializing) {
                     this.constructor = new (function () {

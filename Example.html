@@ -97,6 +97,39 @@
 
             var IBar = new JSgoodies.Interface('bar', ['init:[string, String]', 'someMethod']),
                 ISecond = new JSgoodies.Interface('second', ['additionalMethod']);
+                IThird = new JSgoodies.Interface('third', ['someAdditionalMethod']),
+                Foo = JSgoodies.Class({
+                init: function (a, b) {
+                console.log('this is foo class');
+                },
+                someMethod: function () {
+                },
+                additionalMethod: function () {
+                }
+                })._implements(IBar, ISecond);
+
+                new Foo('go', 'foo', 'gdf');
+
+                var ExFoo = JSgoodies.Class({
+                init: function (a, b) {
+                this._super(a, b);
+                console.log('extending Foo');
+                },
+                someAdditionalMethod: function () {
+                }
+                })._extends(Foo)._implements(IThird);
+
+                new ExFoo('go1', 'foo1');
+
+                var ab = JSgoodies.AbstractClass({init: function (a, b) {}, someMethod: function () {}})._implements(IBar),
+                    ab1 = JSgoodies.AbstractClass({additionalMethod: function () {}})._implements(ISecond),
+                    ab2 = JSgoodies.Class({something: 'fads'})._extends(ab),
+                    ab3 = JSgoodies.Class({})._extends(ab2),
+                    ab4 = JSgoodies.Class({adding: 'fadsfadsfasd'})._extends(ab3),
+                    ab5 = JSgoodies.Class(Foo)._extends(ab4),
+                    ab6 = JSgoodies.Class(ExFoo)._extends(ab1);
+
+
             var ACTest = JSgoodies.AbstractClass({
                 init: function (a, b) {
                 },
