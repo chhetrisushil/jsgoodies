@@ -138,6 +138,114 @@
             d.k.push(2);
             console.log(c.k, d.k);
             new F('1', '2');
+
+
+
+            //Testing ObservableClass
+            var Test = JSgoodies.Class({
+            init: function () {
+            this.addObserver('s', function () {
+            console.log('firing s first');
+            });
+            this.addObserver('s', function () {
+            console.log('firing s');
+            });
+            this.addObserver('u', function () {
+            console.log('firing u');
+            });
+            this.addObserver('u.a', function () {
+            console.log('firing u.a');
+            });
+            this.addObserver('g.a', function () {
+            console.log('firing g.a');
+            });
+            this.addObserver('g.b', function () {
+            console.log('firing g.b');
+            });
+            }
+            })._extends(JSgoodies.ObservableClass);
+
+            var test = new Test();
+            test.fireObserver('g.b');
+            console.log('\n\n\n');
+            var uAH;
+            var Test1 = JSgoodies.Class({
+            init: function () {
+            uAH = function (a, b) {
+            console.log('firing ', arguments);
+            };
+            this.addObserver('s', function () {
+            console.log('firing s first');
+            });
+            this.addObserver('s', function () {
+            console.log('firing s');
+            });
+            this.addObserver('u', uAH);
+            this.addObserver('h', function () {
+            console.log('firing h');
+            }, 'hId');
+            this.addObserver('u.a', uAH, 'myId');
+            this.addObserver('u.a', function () {
+            console.log('firing u.a second');
+            });
+            this.addObserver('g.a', function () {
+            console.log('firing g.a');
+            });
+            this.addObserver('g.b', function () {
+            console.log('firing g.b');
+            });
+            }
+            })._extends(JSgoodies.ObservableClass);
+
+            var test1 = new Test1();
+            test1.fireObserver('u.a', 'adsfa');
+            test1.removeObserver('h', 'hId');
+            //test1.removeObserver('u.a', uAH);
+            //test1.removeObserver('u', uAH);
+            //test1.removeObserverByNamespace('a');
+            test1.fireObserver('u', {'fadsffgsdfg': 'fadsfs'}, 'gsfdgs', 'adfsads');
+
+            // Implements test with custom class
+            var ITestInterface = new JSgoodies.Interface('ITestInterface', ['method1: [String | null, String]', 'method2:3', 'method3']);
+            var CTest = JSgoodies.Class({
+            method1: function (a, b) {
+            console.log('method1');
+            },
+            method2: function (a, b, c) {
+            console.log('method2');
+            },
+            method3: function () {
+            console.log('method3');
+            }
+            })._implements(ITestInterface);
+            var JS = {};
+            JS.AnotherTestClass = JSgoodies.Class({
+            init: function () {
+            console.log('initializing test class');
+            }
+            });
+            var commonFn = function () {
+            console.log('something to test');
+            };
+            var cTest = new CTest();
+            cTest.method1(null, '1');
+            cTest.method2(1, 2, 3);
+            cTest.method3();
+
+            var ATest = JSgoodies.AbstractClass({
+            method1: function (a, b) {
+            console.log('method1');
+            },
+            method2: function (a, b, c) {
+            console.log('method2');
+            },
+            method3: function () {
+            console.log('method3');
+            }
+            })._implements(ITestInterface);
+            var EATest = JSgoodies.Class({})._extends(ATest);
+            new EATest().method1('2', '3');
+
         </script>
     </head>
 </html>

@@ -130,6 +130,8 @@
                 }
             }
 
+            delete this._implements;
+
             return this;
         },
         getArgumentsCount = function (fn) {
@@ -168,6 +170,9 @@
      * Implementatior for 'Class'
      */
     var Class = function (props) {
+        if (!check('[object Object]')(props)) {
+            throw new TypeError('Class Expects Object');
+        }
         var fn = function Class() {
             if ( !initializing && this.init )
                 this.init.apply(this, arguments);
