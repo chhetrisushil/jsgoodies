@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="JSgoodies.js"></script>
+        <script>
+            // override example
+            var a = {
+                name: 'su',
+
+                init: function () {
+                    console.log('parent', this.name);
+                    this.parentMethod();
+                },
+
+                parentMethod: function () {
+                    console.log('parentMethod');
+                },
+
+                overrideThis: function () {
+                    console.log('going to override this');
+                }
+            };
+
+            JSgoodies.Util.override(a, {
+                name: 'ch',
+
+                init: function () {
+                    this._super();
+                    console.log('child');
+                    this.additionalMethod();
+                    this.overrideThis();
+                },
+
+                additionalMethod: function () {
+                    console.log('additionalMethod in child');
+                },
+
+                overrideThis: function () {
+                    this._super();
+                    console.log('now overridden');
+                }
+            });
+            console.log('/**************override example - start******************/');
+            a.init();
+            console.log('/**************override example - end******************/\n \n');
+
+            //inheritance example
+            var i = {
+                    name: 'su',
+                    ar: [1, 2, 3],
+
+                    init: function () {
+                        console.log('parent', this.name);
+                        this.parentMethod();
+                    },
+
+                    parentMethod: function () {
+                        console.log('parentMethod');
+                    },
+
+                    overrideThis: function () {
+                        console.log('going to override this');
+                    },
+
+                    obj: {
+                        s: 'sdaf',
+                        u: 'fd',
+                        h: 'fgf'
+                    }
+                },
+                j = {
+                    name: 'ch',
+
+                    init: function () {
+                        this._super();
+                        console.log('child', this.name);
+                        this.additionalMethod();
+                        this.overrideThis();
+                    },
+
+                    additionalMethod: function () {
+                        console.log('additionalMethod in child');
+                    },
+
+                    overrideThis: function () {
+                        this._super();
+                        console.log('now overridden');
+                    }
+                };
+            console.log('/**************inherit example - start******************/');
+            JSgoodies.Util.inherit(i, j);
+            i.init();
+            console.log('\n \n');
+            j.init();
+            j.ar[j.ar.length] = 4;
+            console.log('/**************inherit example - end******************/\n \n');
+
+            var IBar = new JSgoodies.Interface('bar', ['init:[string, String]', 'someMethod']),
+                ISecond = new JSgoodies.Interface('second', ['additionalMethod']);
+            var ACTest = JSgoodies.AbstractClass({
+                init: function (a, b) {
+                },
+                someMethod: function () {},
+                additionalMethod: function () {}
+            })._implements(IBar, ISecond);
+            var C = JSgoodies.Class({
+                    k: [1],
+                    init: function (a, b) {
+                        console.log('init C');
+                    }
+                })._extends(ACTest);
+            var D = JSgoodies.Class({
+                    init: function (a, b) {
+                        this._super('s', 'd');
+                        console.log('init D');
+                    }
+                })._extends(C);
+            var E = JSgoodies.Class({
+                    init: function (a, b) {
+                        console.log('init E');
+                        this._super('s', 'd');
+                        this.getting();
+                    },
+                    getting: function () {
+                        console.log('getting');
+                    }
+                })._extends(D);
+            var F = JSgoodies.Class({
+                init: function (a, b) {
+                },
+                someMethod: function () {
+                }
+            })._implements(IBar);
+
+            var c = new C('s', 'd');
+            var d = new D('s', 'fd');
+            var e = new E('fd', 'fg');
+            d.k.push(2);
+            console.log(c.k, d.k);
+            new F('1', '2');
+        </script>
+    </head>
+</html>
