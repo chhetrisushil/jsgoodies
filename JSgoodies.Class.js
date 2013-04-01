@@ -15,7 +15,7 @@
                 throw new Error('Class should implement at least one interface');
             }
 
-            for (i =0; (_interface = arguments[i]); i ++) {
+            for (i =0; (_interface = arguments[i], i < len); i ++) {
                 if (!(_interface instanceof JSgoodies.Interface)) {
                     throw new TypeError('Class should implement Type Interface');
                 }
