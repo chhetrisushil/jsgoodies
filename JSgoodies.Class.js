@@ -126,7 +126,11 @@
     // Create a new Class that inherits from this class
     JSgoodies.Class.extend = function(prop) {
         var _super = this.prototype;
-        
+
+        if (JSgoodies.Interface && prop instanceof JSgoodies.Interface) {
+            throw new TypeError('Class cannot extend Interface');
+        }
+
         if (typeof prop === 'function') {
             prop = prop.prototype;
         }
