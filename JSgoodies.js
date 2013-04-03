@@ -150,7 +150,11 @@
         },
         __extends = function (prop) {
             var _super = prop;
-
+			
+			if (prop instanceof Interface) {
+				throw new TypeError('Class cannot extend interface');
+			}
+			
             if (typeof prop === 'function') {
                 initializing = true;
                 _super = new prop();
