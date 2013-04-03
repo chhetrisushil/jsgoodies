@@ -39,7 +39,7 @@
                                     ret = fn.apply(this, arguments);
                                     return ret;
                                 };
-                            })(method.method, proto[method.method], proto, method.argsCount) :
+                            })(method.method, proto[method.method], method.argsCount) :
                                 (function (method, context) {
                                     var toString = Object.prototype.toString,
                                         name = method.method,
