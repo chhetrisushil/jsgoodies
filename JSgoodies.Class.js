@@ -273,7 +273,16 @@ EU = window.EU = {
 
       var _parent = this,
         Child = function() {
-          return _parent.apply(this, arguments);
+          var ret;
+
+          if (utility.hasProperty(props, 'constructor') && utility.isFunction(props.constructor)) {
+            _parent.apply(this, arguments);
+            ret = props.constructor.apply(this, arguments);
+          } else {
+            ret = _parent.apply(this, arguments);
+          }
+
+          return ret;
         },
         Surrogate = function() {
           this.constructor = Child;
