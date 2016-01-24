@@ -1156,7 +1156,9 @@
 
         this.constructor = props.constructor || function() {};
 
-        return this.constructor.apply(this, args);
+        this.constructor.apply(this, args);
+        
+        return this;
     }
 
     EU.Enum = EU.Enum || Enum;
