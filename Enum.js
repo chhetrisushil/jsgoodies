@@ -179,7 +179,9 @@
         assert(isFunction(callback), 'Provide a callback');
 
         for (i in obj) {
-            callback(obj[i], i, obj);
+            if (hasOwnProperty(obj, i)) {
+                callback(obj[i], i, obj);
+            }
         }
     };
 
@@ -1067,12 +1069,12 @@
             if (utility.isObject(item)) {
                 utility.each(item, function(val, key) {
                     keyList = getKey(key);
-                    this[keyList[1]] = new EnumProp(key, keyList[1], keyList[2], enums, val);
+                    this[keyList[1]] = new EnumProp(key, keyList[1], keyList[2], enums, i, val);
                 }.bind(this));
             } else {
                 //treat it like string
                 keyList = getKey(item);
-                this[keyList[1]] = new EnumProp(item, keyList[1], keyList[2], enums);
+                this[keyList[1]] = new EnumProp(item, keyList[1], keyList[2], enums, i);
             }
         }.bind(this));
 
@@ -1115,7 +1117,7 @@
      */
     function Enum(enums) {
         if (this instanceof Enum) {
-            throw new Error('Cannon instantiate Enum');
+            throw new Error('Cannot instantiate Enum');
         }
 
         return new _Enum(enums); //jshint ignore: line
@@ -1133,9 +1135,18 @@
     _Enum.prototype = {
         constructor: _Enum,
 
+        values: function () {
+            var list = [];
+
+            utility.each(this, function (val) {
+                list.push(val);
+            });
+
+            return list;
+        }
     };
 
-    function EnumProp(eName, _name, cParams, props, obj) {
+    function EnumProp(eName, _name, cParams, props, position, obj) {
         cParams = cParams || '';
 
         var args = cParams.indexOf(',') ? cParams.split(',') : cParams ? [cParams] : [],
@@ -1154,10 +1165,14 @@
             return _name;
         };
 
+        this.ordinal = function () {
+            return position;
+        };
+
         this.constructor = props.constructor || function() {};
 
         this.constructor.apply(this, args);
-        
+
         return this;
     }
 
