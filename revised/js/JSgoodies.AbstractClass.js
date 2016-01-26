@@ -1,13 +1,15 @@
 /*
- * JSgoodies.Class.js
+ * JSgoodies.AbstractClass.js
  * Copyright (C) 2016 chhetrisushil <chhetrisushil@gmail.com>
  *
  * Distributed under terms of the MIT license.
  */
 (function(W, JSgoodies) {
   "use strict";
-
   var utility = JSgoodies.utility,
+    abstractConstructor = function() {
+      throw new Error('Trying to instantiate an Abstract Class');
+    },
     extend = function extend(props) {
       props = props || {};
 
@@ -16,9 +18,9 @@
           var ret;
 
           if (utility.hasProperty(props, 'constructor') && utility.isFunction(props.constructor)) {
-            _parent.apply(this, arguments);
+            _parent !== abstractConstructor && _parent.apply(this, arguments); //jshint ignore: line
             ret = props.constructor.apply(this, arguments);
-          } else {
+          } else if (_parent !== abstractConstructor) {
             ret = _parent.apply(this, arguments);
           }
 
@@ -40,30 +42,11 @@
       return Child;
     };
 
-  function CreateClass(props) {
-    props = props || {};
+  var AbstractClass = JSgoodies.CreateClass({
+    constructor: abstractConstructor
+  });
 
-    var Class;
+  AbstractClass.extend = extend;
 
-    if (utility.hasProperty(props, 'constructor') && utility.isFunction(props.constructor)) {
-      Class = props.constructor;
-    } else {
-      Class = function() {
-        if (this.init) {
-          this.init.apply(this, arguments);
-        }
-      };
-    }
-
-    Class.prototype = utility.extend({}, props);
-
-    Class.prototype.constructor = Class;
-
-    Class.extend = extend;
-    Class.implements = utility.implements;
-
-    return Class;
-  }
-
-  JSgoodies.CreateClass = JSgoodies.CreateClass || CreateClass;
+  JSgoodies.AbstractClass = JSgoodies.AbstractClass || AbstractClass;
 })(window, window.JSgoodies);

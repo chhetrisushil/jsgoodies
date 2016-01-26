@@ -19,7 +19,7 @@
     },
     noop = function noop() {},
     hasOwnProperty, extend, inherit, isString, isArray, isFunction, isObject,
-    isBoolean, toArray, assert, each;
+    isBoolean, isUndefined, isNull, toArray, assert, each, getArgumentsInfo;
 
   function Utility() {}
 
@@ -50,6 +50,16 @@
      * @function
      */
     isBoolean: (isBoolean = typeOf('Boolean')),
+
+    /**
+     * @function
+     */
+    isUndefined: (isUndefined = typeOf('Undefined')),
+
+    /**
+     * @function
+     */
+    isNull: (isNull = typeOf('Null')),
 
     /**
      * @function
@@ -276,13 +286,105 @@
      */
     noop: noop,
 
+    implements: function( /*interfaces*/ ) {
+      var proto = this.prototype,
+        i, j,
+        len = arguments.length,
+        _interface,
+        method;
+      if (!len) {
+        throw new Error('Class should implement at least one interface');
+      }
+
+      for (i = 0;
+        (_interface = arguments[i], i < len); i++) {
+        assert(_interface instanceof JSgoodies.Interface, 'Class should implement Type Interface');
+      }
+
+      for (j = 0;
+        (_interface = arguments[j]); j++) {
+        for (var k = 0, args;
+          (method = _interface.methods[k]); k++) {
+          assert(!!(proto[method.method] || isFunction(proto[method.method])), 'This Class does not implement "' + _interface.name + '" interface. Method "' + method.method + '" was not found.');
+
+          method.args = getArgumentsInfo(proto[method.method]);
+
+          assert(method.args.argsCount >= method.argsCount, 'Minimum no. of expected parameter definition for method "' + method.method + '" is: ' + method.argsCount + ' instead only: ' + method.args.argsCount + ' was provided');
+
+          proto[method.method] = !method.isTypeCheck ? (function(name, fn, count) {
+              return function() {
+                var ret;
+
+                assert(arguments.length > count, 'Minimum no. of expected parameter for method "' + name + '" while calling is: ' + count + ' instead only: ' + arguments.length + ' was provided');
+
+                ret = fn.apply(this, arguments);
+                return ret;
+              };
+            })(method.method, proto[method.method], method.argsCount) :
+            (function(method, context) {
+              var toString = Object.prototype.toString,
+                name = method.method,
+                fn = context[name],
+                count = method.argsCount,
+                typeOf = function(val) {
+                  if (typeof val === 'undefined') {
+                    return 'Undefined';
+                  }
+
+                  if (val === null) {
+                    return 'Null';
+                  }
+                  return toString.call(val).match(/^\[object (.*)\]$/)[1];
+                };
+
+              return function() {
+                var ret, i, type, evaledType;
+
+                assert(arguments.length >= count, 'Minimum no. of expected parameter for method "' + name + '" while calling is: ' + count + ' instead only: ' + arguments.length + ' was provided');
+
+                for (i = 0, len = method.types.length; i < len; i++) {
+                  type = method.types[i].replace(/^\s+/, '').replace(/\s+$/, ''); // trim the spaces before and after
+
+                  try {
+                    evaledType = window['eval'].call(window, type);
+                  } catch (e) {
+                    evaledType = undefined;
+                  }
+
+                  if (!~type.indexOf('|')) {
+                    assert(!(typeOf(arguments[i]).toLowerCase() !== type.toLowerCase() && !((typeOf(arguments[i]).toLowerCase() === 'function') ?
+                        arguments[i] === evaledType : arguments[i] && arguments[i].constructor === evaledType)),
+                      'While calling Expected type for argument "' + method.args.argsName[i] + '" in method "' + method.method + '" is: "' + type + '" instead type: "' + typeOf(arguments[i]) + '" was provided');
+                  } else {
+                    // support to provide one alternative e.g. String|Null or String|Number
+                    type = type.split('|');
+                    type[0] = type[0].replace(/^\s+/, '').replace(/\s+$/, '') || 'undefined';
+                    type[1] = type[1].replace(/^\s+/, '').replace(/\s+$/, '') || 'undefined';
+
+                    assert(!((typeOf(arguments[i]).toLowerCase() !== type[0].toLowerCase() && typeOf(arguments[i]).toLowerCase() !== type[1].toLowerCase()) &&
+                        !((typeOf(arguments[i]).toLowerCase() === 'function') ? arguments[i] === evaledType :
+                          arguments[i] && arguments[i].constructor === evaledType)),
+                      'While calling Expected type for argument "' + method.args.argsName[i] + '" in method "' + method.method + '" is: "' + type[0] + '" or "' + type[1] + '" instead type: "' + typeOf(arguments[i]) + '" was provided');
+                  }
+                }
+
+                ret = fn.apply(this, arguments);
+                return ret;
+              };
+            })(method, proto);
+        }
+      }
+
+      return this;
+    },
+
     /**
      * Get arguments count and name of the arguments
      *
      * @param fn {Function}: Function whose arguments info is needed
      * @return {Object}: Contains argument count and names
      */
-    getArgumentsCount: function(fn) {
+    getArgumentsInfo: (getArgumentsInfo = function(fn) {
       assert(isFunction(fn), 'Expected argument type is Function');
 
       var fnToString = fn.toString(),
@@ -292,13 +394,13 @@
         argsCount, argsName;
       match = match.replace(commentRegExp, ''); // this is to remove any comment made for any arguments.
       argsCount = fn.length,
-      argsName = (match) ? ~match.indexOf(',') ? (match.replace(/ /g, '').split(',')) : match : null;
+        argsName = (match) ? ~match.indexOf(',') ? (match.replace(/ /g, '').split(',')) : match : null;
 
       return {
         argsName: argsName,
         argsCount: parseInt(argsCount, 10)
       };
-    }
+    })
   };
 
   JSgoodies.utility = JSgoodies.utility || (new Utility());

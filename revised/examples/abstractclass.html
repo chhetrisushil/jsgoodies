@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Abstractclass</title>
+</head>
+
+<body>
+    <script src="../js/JSgoodies.Util.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/JSgoodies.Class.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/JSgoodies.Interface.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/JSgoodies.AbstractClass.js" type="text/javascript" charset="utf-8"></script>
+
+    <script type="text/javascript" charset="utf-8">
+        var IBar = new JSgoodies.Interface('bar', ['init:[string, String]', 'someMethod']),
+            ISecond = new JSgoodies.Interface('second', ['additionalMethod']),
+            IThird = new JSgoodies.Interface('third', ['someAdditionalMethod']),
+            Foo = JSgoodies.CreateClass({
+                constructor: function() {
+                    console.log('this is foo class');
+                    this.init.apply(this, arguments);
+                },
+                init: function(a, b) {
+                    console.log('init method', arguments);
+                },
+                someMethod: function() {},
+                additionalMethod: function() {}
+            }).implements(IBar, ISecond);
+
+        new Foo('go', 'foo', 'gdf');
+
+        var ExFoo = Foo.extend({
+            init: function(a, b) {
+                this._super(a, b);
+                console.log('extending Foo');
+            },
+            someAdditionalMethod: function() {}
+        }).implements(IThird);
+
+        new ExFoo('go1', 'foo1');
+
+
+        var ab = JSgoodies.AbstractClass.extend({
+                init: function(a, b) {},
+                someMethod: function() {}
+            }).implements(IBar),
+            ab1 = JSgoodies.AbstractClass.extend({
+                additionalMethod: function() {}
+            }).implements(ISecond),
+            ab2 = ab.extend({
+                something: 'fads'
+            }),
+            ab3 = ab2.extend({}),
+            ab4 = ab3.extend({
+                adding: 'fadsfadsfasd'
+            }),
+            ab5 = ab4.extend(Foo.prototype),
+            ab6 = ab1.extend(ExFoo.prototype);
+
+
+        var ACTest = JSgoodies.AbstractClass.extend({
+            init: function(a, b) {},
+            someMethod: function() {},
+            additionalMethod: function() {}
+        }).implements(IBar, ISecond);
+        var C = ACTest.extend({
+            constructor: function() {
+                this.init.apply(this, arguments);
+            },
+            k: [1],
+            init: function(a, b) {
+                console.log('init C', arguments);
+            }
+        });
+        var D = C.extend({
+            init: function(a, b) {
+                this._super('s', 'd');
+                console.log('init D');
+            }
+        });
+        var E = D.extend({
+            init: function(a, b) {
+                console.log('init E');
+                this._super('s', 'd');
+                this.getting();
+            },
+            getting: function() {
+                console.log('getting');
+            }
+        });
+        var F = JSgoodies.CreateClass({
+            init: function(a, b) {},
+            someMethod: function() {}
+        }).implements(IBar);
+
+        var c = new C(1, 'd');
+        var d = new D('s', 'fd');
+        var e = new E('fd', 'fg');
+        d.k.push(2);
+        console.log(c.k, d.k);
+        new F('1', '2');
+    </script>
+</body>
+
+</html>

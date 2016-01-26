@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Interfaceandclass</title>
+</head>
+
+<body>
+    <script src="../js/JSgoodies.Util.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/JSgoodies.Class.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/JSgoodies.Interface.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/JSgoodies.AbstractClass.js" type="text/javascript" charset="utf-8"></script>
+
+    <script type="text/javascript" charset="utf-8">
+        var IBar = new JSgoodies.Interface('bar', ['init:[string, String]', 'someMethod']),
+            ISecond = new JSgoodies.Interface('second', ['additionalMethod']),
+            IThird = new JSgoodies.Interface('third', ['someAdditionalMethod']),
+            Foo = JSgoodies.CreateClass({
+                constructor: function() {
+                    console.log('this is foo class');
+                    this.init.apply(this, arguments);
+                },
+                init: function(a, b) {
+                    console.log('init method', arguments);
+                },
+                someMethod: function() {},
+                additionalMethod: function() {}
+            }).implements(IBar, ISecond);
+
+        new Foo('go', 'foo', 'gdf');
+
+        var ExFoo = Foo.extend({
+            init: function(a, b) {
+                this._super(a, b);
+                console.log('extending Foo');
+            },
+            someAdditionalMethod: function() {}
+        }).implements(IThird);
+
+        new ExFoo('go1', 'foo1');
+    </script>
+</body>
+
+</html>
