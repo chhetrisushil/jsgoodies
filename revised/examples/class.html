@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Class</title>
+</head>
+
+<body>
+    <script src="../js/JSgoodies.Util.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/JSgoodies.Class.js" type="text/javascript" charset="utf-8"></script>
+
+    <script type="text/javascript" charset="utf-8">
+        var A = JSgoodies.CreateClass(),
+            B = A.extend(),
+            C = JSgoodies.CreateClass({
+                constructor: function() {
+                    console.log('this');
+                }
+            });
+
+        var x = new A();
+        var y = new B();
+        var z = new C();
+
+        console.log('x instanceof A', (x instanceof A));
+        console.log('x instanceof B', (x instanceof B));
+        console.log('x instanceof C', (x instanceof C));
+
+        console.log('y instanceof A', (y instanceof A));
+        console.log('y instanceof B', (y instanceof B));
+        console.log('y instanceof C', (y instanceof C));
+
+        console.log('z instanceof A', (z instanceof A));
+        console.log('z instanceof B', (z instanceof B));
+        console.log('z instanceof C', (z instanceof C));
+    </script>
+</body>
+
+</html>

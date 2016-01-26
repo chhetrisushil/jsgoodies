@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Enum</title>
+</head>
+
+<body>
+    <script src="../js/JSgoodies.Util.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/Enum.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+        var NamesEnum = JSgoodies.Enum({
+            enumList: ['SUSHIL(Sushil)', 'RAJIV(Rajiv)', 'AMAR(Amar)', 'CHAMPA(Champa)'],
+
+            constructor: function(name) {
+                this.name = name;
+            }
+        });
+
+        console.log(NamesEnum.SUSHIL);
+
+        var FullNamesEnum = JSgoodies.Enum({
+            enumList: [{
+                'SUSHIL(Sushil, Chhetri)': {
+                    getFullName: function() {
+                        return 'Mr. ' + this._super();
+                    }
+                }
+            }, 'RAJIV(Rajiv, Chhetri)', 'AMAR(Amar, Chhetri)', 'CHAMPA(Champa, Chhetri)'],
+
+            constructor: function(name, lastName) {
+                this.name = name;
+                this.lastName = lastName;
+            },
+
+            getFullName: function() {
+                return this.name + ' ' + this.lastName;
+            }
+        });
+
+        console.log(FullNamesEnum.SUSHIL);
+    </script>
+</body>
+
+</html>
