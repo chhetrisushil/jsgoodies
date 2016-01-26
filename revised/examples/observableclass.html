@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Observableclass</title>
+</head>
+
+<body>
+    <script src="../js/JSgoodies.Util.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/JSgoodies.Class.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/JSgoodies.ObservableClass.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/JSgoodies.ObserverClass.js" type="text/javascript" charset="utf-8"></script>
+
+    <script type="text/javascript" charset="utf-8">
+        var Observable = JSgoodies.ObservableClass.extend({
+                makeChange: function() {
+                    this.notify('done changing');
+                }
+            }),
+            Observer = JSgoodies.ObserverClass.extend({
+                //@override
+                update: function(inst, msg) {
+                    console.log(inst, msg);
+                }
+            }),
+            observable = new Observable(),
+            observer = new Observer();
+
+        observable.addObserver(observer);
+        observable.makeChange();
+    </script>
+</body>
+
+</html>

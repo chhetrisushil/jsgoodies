@@ -39,6 +39,47 @@
         }).implements(IThird);
 
         new ExFoo('go1', 'foo1');
+
+         // Implements test with custom class
+        var ITestInterface = new JSgoodies.Interface('ITestInterface', ['method1: [String | null, String]', 'method2:3', 'method3']);
+        var CTest = JSgoodies.CreateClass({
+            method1: function(a, b) {
+                console.log('method1');
+            },
+            method2: function(a, b, c) {
+                console.log('method2');
+            },
+            method3: function() {
+                console.log('method3');
+            }
+        }).implements(ITestInterface);
+        var JS = {};
+        JS.AnotherTestClass = JSgoodies.CreateClass({
+            init: function() {
+                console.log('initializing test class');
+            }
+        });
+        var commonFn = function() {
+            console.log('something to test');
+        };
+        var cTest = new CTest();
+        cTest.method1(null, '1');
+        cTest.method2(1, 2, 3);
+        cTest.method3();
+
+        var ATest = JSgoodies.AbstractClass.extend({
+            method1: function(a, b) {
+                console.log('method1');
+            },
+            method2: function(a, b, c) {
+                console.log('method2');
+            },
+            method3: function() {
+                console.log('method3');
+            }
+        }).implements(ITestInterface);
+        var EATest = ATest.extend({});
+        new EATest().method1('2', '3');
     </script>
 </body>
 

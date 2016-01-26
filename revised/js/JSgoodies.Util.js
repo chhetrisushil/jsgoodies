@@ -315,7 +315,7 @@
               return function() {
                 var ret;
 
-                assert(arguments.length > count, 'Minimum no. of expected parameter for method "' + name + '" while calling is: ' + count + ' instead only: ' + arguments.length + ' was provided');
+                assert(arguments.length >= count, 'Minimum no. of expected parameter for method "' + name + '" while calling is: ' + count + ' instead only: ' + arguments.length + ' was provided');
 
                 ret = fn.apply(this, arguments);
                 return ret;
