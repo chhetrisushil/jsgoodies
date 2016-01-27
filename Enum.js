@@ -1163,7 +1163,7 @@
             utility.extend(this, obj);
         }
 
-        utility.extend(this, copy);
+        //utility.extend(this, copy);
 
         this.getName = function() {
             return _name;
@@ -1174,6 +1174,14 @@
         };
 
         this.constructor = props.constructor || function() {};
+        
+        utility.each(copy, function (val, key) {
+            if (utility.isFunction(val)) {
+                copy[key] = val.bind(this);
+            }
+        }.bind(this));
+
+        this._super = copy;
 
         this.constructor.apply(this, args);
         
