@@ -1172,6 +1172,10 @@
         this.constructor = props.constructor || function() {};
 
         this.constructor.apply(this, args);
+        
+        if (Object.freeze) {
+            Object.freeze(this);
+        }
 
         return this;
     }
