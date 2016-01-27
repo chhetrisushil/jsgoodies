@@ -26,6 +26,10 @@
                 this[keyList[1]] = new EnumProp(item, keyList[1], keyList[2], enums, i);
             }
         }.bind(this));
+        
+        if (Object.freeze) {
+            Object.freeze(this);
+        }
 
         return this;
     }
