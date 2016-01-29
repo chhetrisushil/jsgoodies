@@ -128,6 +128,10 @@
             if (utility.isFunction(val)) {
                 copy[key] = val.bind(this);
             }
+            
+            if(!utility.hasProperty(this, key)) {
+                this[key] = val;
+            }
         }.bind(this));
 
         this._super = copy;
