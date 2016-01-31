@@ -112,7 +112,9 @@
      */
     getProperty: function getProperty(obj, propStr) {
       if (!/(\(|\))/ig.test(propStr)) {
-        return new Function('o', 'return o.' + propStr)(obj); //jshint ignore: line
+        propStr = '["' + propStr.replace(/[.]/g, '"]["') + '"]';
+
+        return new Function('o', 'return o' + propStr)(obj); //jshint ignore: line
       } else {
         console.warn('Please provide a valid property accessor');
       }
