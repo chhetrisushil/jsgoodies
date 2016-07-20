@@ -10,14 +10,24 @@
   var utility = JSgoodies.utility,
     extend = function extend(props) {
       props = props || {};
+      
+      var isSuperCalled = /this\._super\(.*\)/g.test((props.constructor || new Function()).toString()); //jshint ignore: line
 
       var _parent = this,
         Child = function() {
-          var ret;
+          var ret,
+              tmp = this._super;
 
           if (utility.hasProperty(props, 'constructor') && utility.isFunction(props.constructor)) {
-            _parent.apply(this, arguments);
+            if (isSuperCalled) {
+              this._super = _parent;
+            } else {
+              _parent.apply(this, arguments);
+            }
+
             ret = props.constructor.apply(this, arguments);
+
+            this._super = tmp;
           } else {
             ret = _parent.apply(this, arguments);
           }
